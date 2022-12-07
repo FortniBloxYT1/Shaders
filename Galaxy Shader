@@ -1,0 +1,98 @@
+for Light, Value in pairs(Light:GetChildren()) do
+		if
+			Value.Name ~= "Scouter"
+			and Value.Name ~= "Water"
+			and Value.Name ~= "SSJ"
+			and Value.Name ~= "Sense"
+			and Value.Name ~= "Stop"
+			and Value.Name ~= "SSJ2"
+			and Value.Name ~= "Flash"
+			and Value.Name ~= "NovaBlur"
+		then
+			Value:Destroy()
+		end
+	end
+
+	if _G.Spring == true then
+		_G.Spring = false
+	elseif _G.JPNDark == true then
+		_G.JPNDark = false
+	elseif _G.JPN == true then
+		_G.JPN = false
+	end
+
+	local Bloom = Instance.new("BloomEffect", Light)
+	local ColorCorrection = Instance.new("ColorCorrectionEffect", Light)
+	local Depth = Instance.new("DepthOfFieldEffect", Light)
+	local SunRay = Instance.new("SunRaysEffect", Light)
+
+	sethiddenproperty(workspace.Terrain, "Decoration", true)
+	sethiddenproperty(Light, "Technology", "ShadowMap")
+	sethiddenproperty(Light, "ShadowSoftness", 0.2)
+	sethiddenproperty(Light, "Brightness", 3)
+	sethiddenproperty(Light, "EnvironmentDiffuseScale", 0.2)
+	sethiddenproperty(Light, "EnvironmentSpecularScale", 1)
+	sethiddenproperty(Light, "ExposureCompensation", -2)
+	sethiddenproperty(Light, "GeographicLatitude", -20.356)
+
+	Light.Ambient = Color3.fromRGB(60, 30, 91)
+	Light.Brightness = 3
+	Light.ColorShift_Bottom = Color3.fromRGB(255, 255, 255)
+	Light.ColorShift_Top = Color3.fromRGB(255, 255, 255)
+
+	Bloom.Enabled = true
+	Bloom.Intensity = 0.1
+	Bloom.Size = 100
+	Bloom.Threshold = 0
+
+	ColorCorrection.Brightness = 0
+	ColorCorrection.Contrast = 0
+	ColorCorrection.Enabled = true
+	ColorCorrection.Saturation = 0
+	ColorCorrection.TintColor = Color3.fromRGB(255, 225, 255)
+
+	Depth.Enabled = true
+	Depth.FarIntensity = 0.9
+	Depth.FocusDistance = 0.9
+	Depth.InFocusRadius = 200
+	Depth.NearIntensity = 0.5
+
+	SunRay.Enabled = true
+	SunRay.Intensity = 0.05
+	SunRay.Spread = 1
+
+	_G.Glxy = true
+	runservice.Heartbeat:connect(function()
+		if _G.Glxy == true then
+			Light.FogEnd = 20000
+			Light.ClockTime = 14.5
+			for i, v in pairs(game.Workspace.Live:GetDescendants()) do
+				if v.ClassName == "ParticleEmitter" then
+					v.Brightness = 10
+				end
+			end
+		end
+	end)
+	cors = {}
+	mas = Instance.new("Model", game:service("Lighting"))
+	Sky0 = Instance.new("Sky")
+	Sky0.Parent = mas
+	Sky0.SkyboxBk = "rbxassetid://2118763079"
+	Sky0.SkyboxDn = "rbxassetid://2118766919"
+	Sky0.SkyboxFt = "rbxassetid://2118765204"
+	Sky0.SkyboxLf = "rbxassetid://2118764070"
+	Sky0.SkyboxRt = "rbxassetid://2118761853"
+	Sky0.SkyboxUp = "rbxassetid://2118766003"
+	Sky0.SunAngularSize = 15
+	for i, v in pairs(mas:GetChildren()) do
+		v.Parent = Light
+		pcall(function()
+			v:MakeJoints()
+		end)
+	end
+	mas:Destroy()
+	for i, v in pairs(cors) do
+		spawn(function()
+			pcall(v)
+		end)
+	end
