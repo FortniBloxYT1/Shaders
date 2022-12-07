@@ -1,3 +1,4 @@
+local Light = game.Lighting
 for Light, Value in pairs(Light:GetChildren()) do
 		if
 			Value.Name ~= "Scouter"
