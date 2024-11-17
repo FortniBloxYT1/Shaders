@@ -94,14 +94,17 @@ for Light, Value in pairs(Light:GetChildren()) do
 	end
 
 	_G.JPN = true
-	runservice.PostSimulation:connect(function()
-		if _G.JPN == true then
-			Light.FogEnd = 20000
-			Light.ClockTime = 6.7
-			for i, v in pairs(Path:GetDescendants()) do
-				if v.ClassName == "ParticleEmitter" then
-					v.Brightness = 5
+	if not getgenv().DarkJRun then
+		getgenv().DarkJRun = true
+		runservice.PostSimulation:connect(function()
+			if _G.JPN == true then
+				Light.FogEnd = 20000
+				Light.ClockTime = 6.7
+				for i, v in pairs(Path:GetDescendants()) do
+					if v.ClassName == "ParticleEmitter" then
+						v.Brightness = 5
+					end
 				end
 			end
-		end
-	end)
+		end)
+	end
