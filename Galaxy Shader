@@ -65,17 +65,20 @@ for Light, Value in pairs(Light:GetChildren()) do
 	SunRay.Spread = 1
 
 	_G.Glxy = true
-	runservice.PostSimulation:connect(function()
-		if _G.Glxy == true then
-			Light.FogEnd = 20000
-			Light.ClockTime = 14.5
-			for i, v in pairs(Path:GetDescendants()) do
-				if v.ClassName == "ParticleEmitter" then
-					v.Brightness = 10
+	if not getgenv().GlxyRun then
+		getgenv().GlxyRun = true
+		runservice.PostSimulation:connect(function()
+			if _G.Glxy == true then
+				Light.FogEnd = 20000
+				Light.ClockTime = 14.5
+				for i, v in pairs(Path:GetDescendants()) do
+					if v.ClassName == "ParticleEmitter" then
+						v.Brightness = 10
+					end
 				end
 			end
-		end
-	end)
+		end)
+	end
 	cors = {}
 	mas = Instance.new("Model", game:service("Lighting"))
 	Sky0 = Instance.new("Sky")
