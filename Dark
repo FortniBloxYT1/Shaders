@@ -24,88 +24,91 @@ _G.JPNDark = true
 		_G.Glxy = false
 	end
 	wait(1)
-	for Space, Mat in pairs(workspace:GetChildren()) do
-		if Mat:IsA("BasePart") and Mat.Material == Enum.Material.Grass then
-			Mat.Color = Color3.fromRGB(15, 185, 105)
+	while true do
+		for Space, Mat in pairs(workspace:GetChildren()) do
+			if Mat:IsA("BasePart") and Mat.Material == Enum.Material.Grass then
+				Mat.Color = Color3.fromRGB(15, 185, 105)
+			end
 		end
-	end
+	
+		local Bloom = Instance.new("BloomEffect", Light)
+		local ColorCorrection = Instance.new("ColorCorrectionEffect", Light)
+		local Depth = Instance.new("DepthOfFieldEffect", Light)
+		local SunRay = Instance.new("SunRaysEffect", Light)
+	
+		sethiddenproperty(workspace.Terrain, "Decoration", true)
+		sethiddenproperty(Light, "Technology", "ShadowMap")
+		sethiddenproperty(Light, "ShadowSoftness", 0.2)
+		sethiddenproperty(Light, "Brightness", 3)
+		sethiddenproperty(Light, "EnvironmentDiffuseScale", 0.2)
+		sethiddenproperty(Light, "EnvironmentSpecularScale", 1)
+		sethiddenproperty(Light, "ExposureCompensation", -1)
+		sethiddenproperty(Light, "GeographicLatitude", -20.356)
+	
+		Light.Ambient = Color3.fromRGB(59, 33, 27)
+		Light.Brightness = 2.14
+		Light.ColorShift_Bottom = Color3.fromRGB(11, 0, 20)
+		Light.ColorShift_Top = Color3.fromRGB(240, 127, 14)
+	
+		Bloom.Enabled = true
+		Bloom.Intensity = 0.1
+		Bloom.Size = 100
+		Bloom.Threshold = 0
+	
+		ColorCorrection.Brightness = 0
+		ColorCorrection.Contrast = 0
+		ColorCorrection.Enabled = true
+		ColorCorrection.Saturation = 0.05
+		ColorCorrection.TintColor = Color3.fromRGB(255, 224, 219)
+	
+		Depth.Enabled = true
+		Depth.FarIntensity = 0.9
+		Depth.FocusDistance = 0.9
+		Depth.InFocusRadius = 200
+		Depth.NearIntensity = 0.5
+	
+		SunRay.Enabled = true
+		SunRay.Intensity = 0.05
+		SunRay.Spread = 1
+	
+		cors = {}
+		mas = Instance.new("Model", game:service("Lighting"))
+		Sky0 = Instance.new("Sky")
+		Sky0.Parent = mas
+		Sky0.SkyboxBk = "rbxassetid://323494035"
+		Sky0.SkyboxDn = "rbxassetid://323494368"
+		Sky0.SkyboxFt = "rbxassetid://323494130"
+		Sky0.SkyboxLf = "rbxassetid://323494252"
+		Sky0.SkyboxRt = "rbxassetid://323494067"
+		Sky0.SkyboxUp = "rbxassetid://323493360"
+		Sky0.SunAngularSize = 14
+		for i, v in pairs(mas:GetChildren()) do
+			v.Parent = Light
+			pcall(function()
+				v:MakeJoints()
+			end)
+		end
+		mas:Destroy()
+		for i, v in pairs(cors) do
+			spawn(function()
+				pcall(v)
+			end)
+		end
 
-	local Bloom = Instance.new("BloomEffect", Light)
-	local ColorCorrection = Instance.new("ColorCorrectionEffect", Light)
-	local Depth = Instance.new("DepthOfFieldEffect", Light)
-	local SunRay = Instance.new("SunRaysEffect", Light)
-
-	sethiddenproperty(workspace.Terrain, "Decoration", true)
-	sethiddenproperty(Light, "Technology", "ShadowMap")
-	sethiddenproperty(Light, "ShadowSoftness", 0.2)
-	sethiddenproperty(Light, "Brightness", 3)
-	sethiddenproperty(Light, "EnvironmentDiffuseScale", 0.2)
-	sethiddenproperty(Light, "EnvironmentSpecularScale", 1)
-	sethiddenproperty(Light, "ExposureCompensation", -1)
-	sethiddenproperty(Light, "GeographicLatitude", -20.356)
-
-	Light.Ambient = Color3.fromRGB(59, 33, 27)
-	Light.Brightness = 2.14
-	Light.ColorShift_Bottom = Color3.fromRGB(11, 0, 20)
-	Light.ColorShift_Top = Color3.fromRGB(240, 127, 14)
-
-	Bloom.Enabled = true
-	Bloom.Intensity = 0.1
-	Bloom.Size = 100
-	Bloom.Threshold = 0
-
-	ColorCorrection.Brightness = 0
-	ColorCorrection.Contrast = 0
-	ColorCorrection.Enabled = true
-	ColorCorrection.Saturation = 0.05
-	ColorCorrection.TintColor = Color3.fromRGB(255, 224, 219)
-
-	Depth.Enabled = true
-	Depth.FarIntensity = 0.9
-	Depth.FocusDistance = 0.9
-	Depth.InFocusRadius = 200
-	Depth.NearIntensity = 0.5
-
-	SunRay.Enabled = true
-	SunRay.Intensity = 0.05
-	SunRay.Spread = 1
-
-	cors = {}
-	mas = Instance.new("Model", game:service("Lighting"))
-	Sky0 = Instance.new("Sky")
-	Sky0.Parent = mas
-	Sky0.SkyboxBk = "rbxassetid://323494035"
-	Sky0.SkyboxDn = "rbxassetid://323494368"
-	Sky0.SkyboxFt = "rbxassetid://323494130"
-	Sky0.SkyboxLf = "rbxassetid://323494252"
-	Sky0.SkyboxRt = "rbxassetid://323494067"
-	Sky0.SkyboxUp = "rbxassetid://323493360"
-	Sky0.SunAngularSize = 14
-	for i, v in pairs(mas:GetChildren()) do
-		v.Parent = Light
-		pcall(function()
-			v:MakeJoints()
-		end)
-	end
-	mas:Destroy()
-	for i, v in pairs(cors) do
-		spawn(function()
-			pcall(v)
-		end)
-	end
-
-	_G.JPN = true
-	if not getgenv().DarkRun then
-		getgenv().DarkRun = true
-		game:GetService("RunService").PostSimulation:connect(function()
-			if _G.JPN == true then
-				Light.FogEnd = 20000
-				Light.ClockTime = 6.7
-				for i, v in pairs(Path:GetDescendants()) do
-					if v.ClassName == "ParticleEmitter" then
-						v.Brightness = 5
+		_G.JPN = true
+		if not getgenv().DarkRun then
+			getgenv().DarkRun = true
+			game:GetService("RunService").PostSimulation:connect(function()
+				if _G.JPN == true then
+					Light.FogEnd = 20000
+					Light.ClockTime = 6.7
+					for i, v in pairs(Path:GetDescendants()) do
+						if v.ClassName == "ParticleEmitter" then
+							v.Brightness = 5
+						end
 					end
 				end
-			end
-		end)
+			end)
+		end
+		task.wait(2)
 	end
