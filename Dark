@@ -31,9 +31,8 @@ _G.JPNDark = true
 			end
 		end
 
-		if not Light:FindFirstChild("SomeBloom") then
+		if not Bloom then
 			Bloom = Instance.new("BloomEffect", Light)
-			Bloom.Name = "SomeBloom"
 			ColorCorrection = Instance.new("ColorCorrectionEffect", Light)
 			Depth = Instance.new("DepthOfFieldEffect", Light)
 			SunRay = Instance.new("SunRaysEffect", Light)
@@ -75,9 +74,14 @@ _G.JPNDark = true
 		SunRay.Spread = 1
 	
 		cors = {}
-		mas = Instance.new("Model", game:service("Lighting"))
-		Sky0 = Instance.new("Sky")
-		Sky0.Parent = mas
+		if not mas then
+			mas = Instance.new("Model", game:service("Lighting"))
+		end
+
+		if not Sky0 then
+			Sky0 = Instance.new("Sky")
+			Sky0.Parent = mas
+		end
 		Sky0.SkyboxBk = "rbxassetid://323494035"
 		Sky0.SkyboxDn = "rbxassetid://323494368"
 		Sky0.SkyboxFt = "rbxassetid://323494130"
