@@ -1,5 +1,5 @@
 local Light = game.Lighting
-local runservice = game.RunService
+local runservice = game:GetService("RunService")
 for Light, Value in pairs(Light:GetChildren()) do
 		if
 			Value.Name ~= "Scouter"
