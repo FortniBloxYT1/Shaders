@@ -30,11 +30,14 @@ _G.JPNDark = true
 				Mat.Color = Color3.fromRGB(15, 185, 105)
 			end
 		end
-	
-		local Bloom = Instance.new("BloomEffect", Light)
-		local ColorCorrection = Instance.new("ColorCorrectionEffect", Light)
-		local Depth = Instance.new("DepthOfFieldEffect", Light)
-		local SunRay = Instance.new("SunRaysEffect", Light)
+
+		if not Light:FindFirstChild("SomeBloom") then
+			Bloom = Instance.new("BloomEffect", Light)
+			Bloom.Name = "SomeBloom"
+			ColorCorrection = Instance.new("ColorCorrectionEffect", Light)
+			Depth = Instance.new("DepthOfFieldEffect", Light)
+			SunRay = Instance.new("SunRaysEffect", Light)
+		end
 	
 		sethiddenproperty(workspace.Terrain, "Decoration", true)
 		sethiddenproperty(Light, "Technology", "ShadowMap")
