@@ -94,7 +94,7 @@ _G.JPNDark = true
 	end
 
 	_G.JPN = true
-	runservice.Heartbeat:connect(function()
+	game:GetService("RunService").Heartbeat:connect(function()
 		if _G.JPN == true then
 			Light.FogEnd = 20000
 			Light.ClockTime = 6.7
