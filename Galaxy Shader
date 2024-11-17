@@ -64,7 +64,7 @@ for Light, Value in pairs(Light:GetChildren()) do
 	SunRay.Spread = 1
 
 	_G.Glxy = true
-	runservice.Heartbeat:connect(function()
+	runservice.PostSimulation:connect(function()
 		if _G.Glxy == true then
 			Light.FogEnd = 20000
 			Light.ClockTime = 14.5
