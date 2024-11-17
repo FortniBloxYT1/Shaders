@@ -24,7 +24,7 @@ _G.JPNDark = true
 		_G.Glxy = false
 	end
 	wait(1)
-	while true do
+	while _G.JPNDark do
 		for Space, Mat in pairs(workspace:GetChildren()) do
 			if Mat:IsA("BasePart") and Mat.Material == Enum.Material.Grass then
 				Mat.Color = Color3.fromRGB(15, 185, 105)
