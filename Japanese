@@ -1,5 +1,6 @@
 local Light = game.Lighting
 local runservice = game:GetService("RunService")
+local Path = workspace:FindFirstChild("Live") or workspace.Main.Live
 for Light, Value in pairs(Light:GetChildren()) do
 		if
 			Value.Name ~= "Scouter"
@@ -97,7 +98,7 @@ for Light, Value in pairs(Light:GetChildren()) do
 		if _G.JPN == true then
 			Light.FogEnd = 20000
 			Light.ClockTime = 6.7
-			for i, v in pairs(game.Workspace.Live:GetDescendants()) do
+			for i, v in pairs(Path:GetDescendants()) do
 				if v.ClassName == "ParticleEmitter" then
 					v.Brightness = 5
 				end
