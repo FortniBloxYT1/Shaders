@@ -1,5 +1,5 @@
 local Light = game.Lighting
-local runservice = game.RunService
+local runservice = game:GetService("RunService")
 for Light, Value in pairs(Light:GetChildren()) do
 		if
 			Value.Name ~= "Scouter"
@@ -93,7 +93,7 @@ for Light, Value in pairs(Light:GetChildren()) do
 	end
 
 	_G.JPN = true
-	runservice.Heartbeat:connect(function()
+	runservice.PostSimulation:connect(function()
 		if _G.JPN == true then
 			Light.FogEnd = 20000
 			Light.ClockTime = 6.7
