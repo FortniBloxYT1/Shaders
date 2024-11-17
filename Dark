@@ -95,14 +95,17 @@ _G.JPNDark = true
 	end
 
 	_G.JPN = true
-	game:GetService("RunService").PostSimulation:connect(function()
-		if _G.JPN == true then
-			Light.FogEnd = 20000
-			Light.ClockTime = 6.7
-			for i, v in pairs(Path:GetDescendants()) do
-				if v.ClassName == "ParticleEmitter" then
-					v.Brightness = 5
+	if not getgenv().DarkRun then
+		getgenv().DarkRun = true
+		game:GetService("RunService").PostSimulation:connect(function()
+			if _G.JPN == true then
+				Light.FogEnd = 20000
+				Light.ClockTime = 6.7
+				for i, v in pairs(Path:GetDescendants()) do
+					if v.ClassName == "ParticleEmitter" then
+						v.Brightness = 5
+					end
 				end
 			end
-		end
-	end)
+		end)
+	end
