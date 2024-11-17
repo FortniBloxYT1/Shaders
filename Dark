@@ -1,4 +1,5 @@
 local Light = game.Lighting
+local Path = workspace:FindFirstChild("Live") or workspace.Main.Live
 _G.JPNDark = true
 	_G.JPN = true
 	for Light, Value in pairs(Light:GetChildren()) do
@@ -98,7 +99,7 @@ _G.JPNDark = true
 		if _G.JPN == true then
 			Light.FogEnd = 20000
 			Light.ClockTime = 6.7
-			for i, v in pairs(game.Workspace.Live:GetDescendants()) do
+			for i, v in pairs(Path:GetDescendants()) do
 				if v.ClassName == "ParticleEmitter" then
 					v.Brightness = 5
 				end
