@@ -17,6 +17,38 @@ for Light, Value in pairs(Light:GetChildren()) do
 		end
 	end
 
+    for _, Obj in pairs(workspace:GetChildren()) do
+        if Obj.Name == "StreetLamp" then
+            if not Obj:FindFirstChild("ModelCutter") and Obj.Lamp:FindFirstChild("SpotLight") then
+                Obj.Lamp.SpotLight.Brightness = 2.5
+                Obj.Lamp.SpotLight.Color = Color3.fromRGB(252, 255, 165)
+            end
+        end
+    end
+
+    workspace.DescendantAdded:Connect(function(Descendant)
+        if Descendant.ClassName == "PointLight" and Descendant.Parent.Name:find("Window") then
+            Descendant.Brightness = 0.8
+            Descendant.Color = Color3.fromRGB(255, 255, 130)
+            Descendant.Shadows = true
+        end
+    end)
+
+    for _, Obj in pairs(workspace:GetDescendants()) do
+        if Obj.ClassName == "PointLight" and Obj.Parent.Name:find("Window") then
+            Obj.Brightness = 0.8
+            Obj.Color = Color3.fromRGB(255, 255, 180)
+            Obj.Shadows = true
+        end
+    end
+
+    workspace.ChildAdded:Connect(function(Child)
+        if Child.Name == "StreetLamp" then
+            Child.Lamp.SpotLight.Brightness = 2.5
+            Child.Lamp.SpotLight.Color = Color3.fromRGB(252, 255, 130)
+        end
+    end)
+
 	if _G.Spring == true then
 		_G.Spring = false
 	elseif _G.JPNDark == true then
@@ -35,7 +67,7 @@ for Light, Value in pairs(Light:GetChildren()) do
 	
 		sethiddenproperty(workspace.Terrain, "Decoration", true)
 		sethiddenproperty(Light, "Technology", "ShadowMap")
-		sethiddenproperty(Light, "ShadowSoftness", 0.2)
+		sethiddenproperty(Light, "ShadowSoftness", 0.25)
 		sethiddenproperty(Light, "Brightness", 3)
 		sethiddenproperty(Light, "EnvironmentDiffuseScale", 0.2)
 		sethiddenproperty(Light, "EnvironmentSpecularScale", 1)
