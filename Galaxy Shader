@@ -21,7 +21,7 @@ for Light, Value in pairs(Light:GetChildren()) do
         if Obj.Name == "StreetLamp" then
             if not Obj:FindFirstChild("ModelCutter") and Obj.Lamp:FindFirstChild("SpotLight") then
                 Obj.Lamp.SpotLight.Brightness = 2.5
-                Obj.Lamp.SpotLight.Color = Color3.fromRGB(252, 255, 165)
+                Obj.Lamp.SpotLight.Color = Color3.fromRGB(252, 255, 130)
             end
         end
     end
