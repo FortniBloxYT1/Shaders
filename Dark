@@ -1,5 +1,5 @@
 local Light = game.Lighting
-local Path = workspace:FindFirstChild("Live") or workspace.Main.Live
+local Path = workspace:FindFirstChild("Live") or workspace.Main.Live or workspace
 _G.JPNDark = true
 	_G.JPN = true
 	for Light, Value in pairs(Light:GetChildren()) do
