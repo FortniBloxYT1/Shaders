@@ -12,6 +12,7 @@ _G.JPNDark = true
 			and Value.Name ~= "SSJ2"
 			and Value.Name ~= "Flash"
 			and Value.Name ~= "NovaBlur"
+			and game.PlaceId ~= 18668065416
 		then
 			Value:Destroy()
 		end
