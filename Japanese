@@ -1,6 +1,6 @@
 local Light = game.Lighting
 local runservice = game:GetService("RunService")
-local Path = workspace:FindFirstChild("Live") or workspace.Main.Live or workspace
+local Path = workspace:FindFirstChild("Live") or workspace:FindFirstChild("Main"):FindFirstChild("Live") or workspace
 _G.JPN = true
 for Light, Value in pairs(Light:GetChildren()) do
 		if
