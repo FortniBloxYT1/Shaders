@@ -94,3 +94,160 @@ local function SetupWindowLight(Object)
 	Object.Color = Color3.fromRGB(255, 255, 180)
 	Object.Shadows = true
 end
+
+local function SetupParticle(Object)
+	if not Object:IsA("ParticleEmitter") or ChangedParticles[Object] then return end
+
+	ChangedParticles[Object] = Object.Brightness
+	Object.Brightness = 10
+
+	Connections[#Connections + 1] = Object:GetPropertyChangedSignal("Brightness"):Connect(function()
+		if _G.Glxy and Object.Parent and Object.Brightness ~= 10 then
+			Object.Brightness = 10
+		end
+	end)
+end
+
+for _, Object in pairs(workspace:GetChildren()) do
+	SetupStreetLamp(Object)
+end
+
+for _, Object in pairs(workspace:GetDescendants()) do
+	SetupWindowLight(Object)
+end
+
+for _, Object in pairs(Path:GetDescendants()) do
+	SetupParticle(Object)
+end
+
+Connections[#Connections + 1] = workspace.ChildAdded:Connect(SetupStreetLamp)
+Connections[#Connections + 1] = workspace.DescendantAdded:Connect(SetupWindowLight)
+Connections[#Connections + 1] = Path.DescendantAdded:Connect(SetupParticle)
+
+local Bloom = AddObject(Instance.new("BloomEffect"))
+local ColorCorrection = AddObject(Instance.new("ColorCorrectionEffect"))
+local Depth = AddObject(Instance.new("DepthOfFieldEffect"))
+local SunRay = AddObject(Instance.new("SunRaysEffect"))
+local Sky0 = AddObject(Instance.new("Sky"))
+
+Sky0.SkyboxBk = "rbxassetid://2118763079"
+Sky0.SkyboxDn = "rbxassetid://2118766919"
+Sky0.SkyboxFt = "rbxassetid://2118765204"
+Sky0.SkyboxLf = "rbxassetid://2118764070"
+Sky0.SkyboxRt = "rbxassetid://2118761853"
+Sky0.SkyboxUp = "rbxassetid://2118766003"
+Sky0.SunAngularSize = 15
+
+local Cleanup
+Cleanup = function()
+	_G.Glxy = false
+
+	for _, Connection in pairs(Connections) do
+		Connection:Disconnect()
+	end
+
+	for Object, Values in pairs(ChangedStreetLights) do
+		pcall(function()
+			Object.Brightness = Values.Brightness
+			Object.Color = Values.Color
+		end)
+	end
+
+	for Object, Values in pairs(ChangedWindowLights) do
+		pcall(function()
+			Object.Brightness = Values.Brightness
+			Object.Color = Values.Color
+			Object.Shadows = Values.Shadows
+		end)
+	end
+
+	for Object, Brightness in pairs(ChangedParticles) do
+		pcall(function()
+			Object.Brightness = Brightness
+		end)
+	end
+
+	for _, Object in pairs(Objects) do
+		Object:Destroy()
+	end
+
+	for _, Object in pairs(StoredLighting) do
+		if not Object.Parent then
+			Object.Parent = Light
+		end
+	end
+
+	Light.ShadowSoftness = OriginalLighting.ShadowSoftness
+	Light.Brightness = OriginalLighting.Brightness
+	Light.EnvironmentDiffuseScale = OriginalLighting.EnvironmentDiffuseScale
+	Light.EnvironmentSpecularScale = OriginalLighting.EnvironmentSpecularScale
+	Light.ExposureCompensation = OriginalLighting.ExposureCompensation
+	Light.GeographicLatitude = OriginalLighting.GeographicLatitude
+	Light.Ambient = OriginalLighting.Ambient
+	Light.ColorShift_Bottom = OriginalLighting.ColorShift_Bottom
+	Light.ColorShift_Top = OriginalLighting.ColorShift_Top
+	Light.FogEnd = OriginalLighting.FogEnd
+	Light.ClockTime = OriginalLighting.ClockTime
+
+	pcall(function()
+		if OriginalTechnology ~= nil then
+			sethiddenproperty(Light, "Technology", OriginalTechnology)
+		end
+
+		if OriginalDecoration ~= nil then
+			sethiddenproperty(Terrain, "Decoration", OriginalDecoration)
+		end
+	end)
+
+	if Environment.BoogaShaderCleanup == Cleanup then
+		Environment.BoogaShaderCleanup = nil
+	end
+end
+
+Environment.BoogaShaderCleanup = Cleanup
+
+Connections[#Connections + 1] = RunService.PostSimulation:Connect(function()
+	if _G.Glxy then
+		Light.FogEnd = 20000
+		Light.ClockTime = 14.5
+	end
+end)
+
+while _G.Glxy and Environment.BoogaShaderCleanup == Cleanup do
+	sethiddenproperty(Terrain, "Decoration", true)
+	sethiddenproperty(Light, "Technology", "ShadowMap")
+	sethiddenproperty(Light, "ShadowSoftness", 0.25)
+	sethiddenproperty(Light, "Brightness", 3)
+	sethiddenproperty(Light, "EnvironmentDiffuseScale", 0.2)
+	sethiddenproperty(Light, "EnvironmentSpecularScale", 1)
+	sethiddenproperty(Light, "ExposureCompensation", -2)
+	sethiddenproperty(Light, "GeographicLatitude", -20.356)
+
+	Light.Ambient = Color3.fromRGB(60, 30, 91)
+	Light.Brightness = 3
+	Light.ColorShift_Bottom = Color3.fromRGB(255, 255, 255)
+	Light.ColorShift_Top = Color3.fromRGB(255, 255, 255)
+
+	Bloom.Enabled = true
+	Bloom.Intensity = 0.1
+	Bloom.Size = 100
+	Bloom.Threshold = 0
+
+	ColorCorrection.Brightness = 0
+	ColorCorrection.Contrast = 0
+	ColorCorrection.Enabled = true
+	ColorCorrection.Saturation = 0
+	ColorCorrection.TintColor = Color3.fromRGB(255, 225, 255)
+
+	Depth.Enabled = true
+	Depth.FarIntensity = 0.9
+	Depth.FocusDistance = 0.9
+	Depth.InFocusRadius = 200
+	Depth.NearIntensity = 0.5
+
+	SunRay.Enabled = true
+	SunRay.Intensity = 0.05
+	SunRay.Spread = 1
+
+	task.wait(2)
+end
