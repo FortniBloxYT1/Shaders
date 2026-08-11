@@ -62,7 +62,7 @@ local function CreateShader()
 
 	local DisabledBloom = Instance.new("BloomEffect")
 	DisabledBloom.Enabled = false
-  DisabledBloom.Intensity = 0.35
+	DisabledBloom.Intensity = 0.35
 	DisabledBloom.Threshold = 0.2
 	DisabledBloom.Size = 56
 
