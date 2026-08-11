@@ -9,9 +9,9 @@ if Environment.BoogaShaderCleanup then
 end
 
 _G.Spring = false
-_G.JPN = false
+_G.JPNDark = false
 _G.Glxy = false
-_G.JPNDark = true
+_G.JPN = true
 
 local Objects = {}
 local Connections = {}
@@ -78,7 +78,7 @@ local function SetupParticle(Object)
 	Object.Brightness = 5
 
 	Connections[#Connections + 1] = Object:GetPropertyChangedSignal("Brightness"):Connect(function()
-		if _G.JPNDark and Object.Parent and Object.Brightness ~= 5 then
+		if _G.JPN and Object.Parent and Object.Brightness ~= 5 then
 			Object.Brightness = 5
 		end
 	end)
