@@ -9,9 +9,9 @@ if Environment.BoogaShaderCleanup then
 end
 
 _G.Spring = false
-_G.JPNDark = false
+_G.JPN = false
 _G.Glxy = false
-_G.JPN = true
+_G.JPNDark = true
 
 local Objects = {}
 local Connections = {}
@@ -78,7 +78,7 @@ local function SetupParticle(Object)
 	Object.Brightness = 5
 
 	Connections[#Connections + 1] = Object:GetPropertyChangedSignal("Brightness"):Connect(function()
-		if _G.JPN and Object.Parent and Object.Brightness ~= 5 then
+		if _G.JPNDark and Object.Parent and Object.Brightness ~= 5 then
 			Object.Brightness = 5
 		end
 	end)
@@ -94,3 +94,126 @@ end
 
 Connections[#Connections + 1] = workspace.ChildAdded:Connect(SetupGrass)
 Connections[#Connections + 1] = Path.DescendantAdded:Connect(SetupParticle)
+
+local Bloom = AddObject(Instance.new("BloomEffect"))
+local ColorCorrection = AddObject(Instance.new("ColorCorrectionEffect"))
+local Depth = AddObject(Instance.new("DepthOfFieldEffect"))
+local SunRay = AddObject(Instance.new("SunRaysEffect"))
+local Sky0 = AddObject(Instance.new("Sky"))
+
+Sky0.SkyboxBk = "rbxassetid://323494035"
+Sky0.SkyboxDn = "rbxassetid://323494368"
+Sky0.SkyboxFt = "rbxassetid://323494130"
+Sky0.SkyboxLf = "rbxassetid://323494252"
+Sky0.SkyboxRt = "rbxassetid://323494067"
+Sky0.SkyboxUp = "rbxassetid://323493360"
+Sky0.SunAngularSize = 14
+
+local Cleanup
+Cleanup = function()
+	_G.JPNDark = false
+
+	for _, Connection in pairs(Connections) do
+		Connection:Disconnect()
+	end
+
+	for Object, Color in pairs(ChangedGrass) do
+		pcall(function()
+			Object.Color = Color
+		end)
+	end
+
+	for Object, Brightness in pairs(ChangedParticles) do
+		pcall(function()
+			Object.Brightness = Brightness
+		end)
+	end
+
+	for _, Object in pairs(Objects) do
+		Object:Destroy()
+	end
+
+	for _, Object in pairs(StoredLighting) do
+		if not Object.Parent then
+			Object.Parent = Light
+		end
+	end
+
+	Light.ShadowSoftness = OriginalLighting.ShadowSoftness
+	Light.Brightness = OriginalLighting.Brightness
+	Light.EnvironmentDiffuseScale = OriginalLighting.EnvironmentDiffuseScale
+	Light.EnvironmentSpecularScale = OriginalLighting.EnvironmentSpecularScale
+	Light.ExposureCompensation = OriginalLighting.ExposureCompensation
+	Light.GeographicLatitude = OriginalLighting.GeographicLatitude
+	Light.Ambient = OriginalLighting.Ambient
+	Light.ColorShift_Bottom = OriginalLighting.ColorShift_Bottom
+	Light.ColorShift_Top = OriginalLighting.ColorShift_Top
+	Light.FogEnd = OriginalLighting.FogEnd
+	Light.ClockTime = OriginalLighting.ClockTime
+
+	pcall(function()
+		if OriginalTechnology ~= nil then
+			sethiddenproperty(Light, "Technology", OriginalTechnology)
+		end
+
+		if OriginalDecoration ~= nil then
+			sethiddenproperty(Terrain, "Decoration", OriginalDecoration)
+		end
+	end)
+
+	if Environment.BoogaShaderCleanup == Cleanup then
+		Environment.BoogaShaderCleanup = nil
+	end
+end
+
+Environment.BoogaShaderCleanup = Cleanup
+
+Connections[#Connections + 1] = RunService.PostSimulation:Connect(function()
+	if _G.JPNDark then
+		Light.FogEnd = 20000
+		Light.ClockTime = 6.7
+	end
+end)
+
+while _G.JPNDark and Environment.BoogaShaderCleanup == Cleanup do
+	for _, Object in pairs(workspace:GetChildren()) do
+		SetupGrass(Object)
+	end
+
+	sethiddenproperty(Terrain, "Decoration", true)
+	sethiddenproperty(Light, "Technology", "ShadowMap")
+	sethiddenproperty(Light, "ShadowSoftness", 0.2)
+	sethiddenproperty(Light, "Brightness", 3)
+	sethiddenproperty(Light, "EnvironmentDiffuseScale", 0.2)
+	sethiddenproperty(Light, "EnvironmentSpecularScale", 1)
+	sethiddenproperty(Light, "ExposureCompensation", -1)
+	sethiddenproperty(Light, "GeographicLatitude", -20.356)
+
+	Light.Ambient = Color3.fromRGB(59, 33, 27)
+	Light.Brightness = 2.14
+	Light.ColorShift_Bottom = Color3.fromRGB(11, 0, 20)
+	Light.ColorShift_Top = Color3.fromRGB(240, 127, 14)
+
+	Bloom.Enabled = true
+	Bloom.Intensity = 0.1
+	Bloom.Size = 100
+	Bloom.Threshold = 0
+
+	ColorCorrection.Brightness = 0
+	ColorCorrection.Contrast = 0
+	ColorCorrection.Enabled = true
+	ColorCorrection.Saturation = 0.05
+	ColorCorrection.TintColor = Color3.fromRGB(255, 224, 219)
+
+	Depth.Enabled = true
+	Depth.FarIntensity = 0.9
+	Depth.FocusDistance = 0.9
+	Depth.InFocusRadius = 200
+	Depth.NearIntensity = 0.5
+
+	SunRay.Enabled = true
+	SunRay.Intensity = 0.05
+	SunRay.Spread = 1
+
+	task.wait(2)
+end
